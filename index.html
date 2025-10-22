@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>AI Resume Builder</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(to right, #74ebd5, #ACB6E5);
+            margin: 0;
+            padding: 20px;
+        }
+        
+        .container {
+            display: flex;
+            gap: 20px;
+        }
+        
+        .card {
+            background: #fff;
+            padding: 20px;
+            border-radius: 12px;
+            flex: 1;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        
+        input,
+        textarea {
+            width: 100%;
+            margin-bottom: 12px;
+            padding: 8px;
+            font-size: 16px;
+        }
+        
+        button {
+            background: #6a11cb;
+            color: #fff;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            margin: 5px 0;
+            font-size: 16px;
+        }
+        
+        button:hover {
+            background: #2575fc;
+        }
+        
+        #resumePreview h2 {
+            color: #6a11cb;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <!-- Resume Builder -->
+        <div class="card">
+            <h2>Resume Builder</h2>
+            <form id="resumeForm">
+                <label>Full Name:</label>
+                <input type="text" id="name">
+
+                <label>Education:</label>
+                <textarea id="education"></textarea>
+
+                <label>Skills:</label>
+                <textarea id="skills"></textarea>
+
+                <label>Experience:</label>
+                <textarea id="experience"></textarea>
+
+                <label>Achievements:</label>
+                <textarea id="achievements"></textarea>
+
+                <label>Projects:</label>
+                <textarea id="projects"></textarea>
+
+                <label>Certifications:</label>
+                <textarea id="certifications"></textarea>
+
+                <button type="submit">Generate Resume</button>
+            </form>
+
+            <!-- Download & Print Buttons -->
+            <button id="downloadBtn">Download PDF</button>
+            <button id="printBtn">Print Resume</button>
+        </div>
+
+        <!-- Resume Preview -->
+        <div class="card" id="resumePreview">
+            <h2 id="previewName"></h2>
+            <div class="section">
+                <h3>Education</h3>
+                <p id="previewEducation"></p>
+            </div>
+
+            <div class="section">
+                <h3>Skills</h3>
+                <p id="previewSkills"></p>
+            </div>
+
+            <div class="section">
+                <h3>Experience</h3>
+                <p id="previewExperience"></p>
+            </div>
+
+            <div class="section">
+                <h3>Achievements</h3>
+                <p id="previewAchievements"></p>
+            </div>
+
+            <div class="section">
+                <h3>Projects</h3>
+                <p id="previewProjects"></p>
+            </div>
+
+            <div class="section">
+                <h3>Certifications</h3>
+                <p id="previewCertifications"></p>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- html2pdf.js for PDF generation -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+
+    <script>
+        // Generate Resume Preview
+        document.getElementById("resumeForm").addEventListener("submit", function(e) {
+            e.preventDefault();
+
+            // Get form values
+            const name = document.getElementById("name").value;
+            const education = document.getElementById("education").value;
+            const skills = document.getElementById("skills").value;
+            const experience = document.getElementById("experience").value;
+            const achievements = document.getElementById("achievements").value;
+            const projects = document.getElementById("projects").value;
+            const certifications = document.getElementById("certifications").value;
+
+            // Update preview
+            document.getElementById("previewName").innerText = name;
+            document.getElementById("previewEducation").innerText = education;
+            document.getElementById("previewSkills").innerText = skills;
+            document.getElementById("previewExperience").innerText = experience;
+            document.getElementById("previewAchievements").innerText = achievements;
+            document.getElementById("previewProjects").innerText = projects;
+            document.getElementById("previewCertifications").innerText = certifications;
+        });
+
+        // Download PDF
+        document.getElementById("downloadBtn").addEventListener("click", function() {
+            const resume = document.getElementById("resumePreview");
+            const opt = {
+                margin: 0.5,
+                filename: 'My_Resume.pdf',
+                image: {
+                    type: 'jpeg',
+                    quality: 0.98
+                },
+                html2canvas: {
+                    scale: 2
+                },
+                jsPDF: {
+                    unit: 'in',
+                    format: 'a4',
+                    orientation: 'portrait'
+                }
+            };
+            html2pdf().set(opt).from(resume).save();
+        });
+
+        // Print Resume
+        document.getElementById("printBtn").addEventListener("click", function() {
+            const printContents = document.getElementById("resumePreview").innerHTML;
+            const originalContents = document.body.innerHTML;
+
+            document.body.innerHTML = printContents;
+            window.print();
+            document.body.innerHTML = originalContents;
+            location.reload(); // reload so form comes back
+        });
+    </script>
+</body>
+
+</html>
